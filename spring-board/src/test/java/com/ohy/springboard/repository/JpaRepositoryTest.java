@@ -23,7 +23,7 @@ class JpaRepositoryTest {
         this.articleCommentRepository = articleCommentRepository;
     }
 
-    @DisplayName("selelct 테스트")
+    @DisplayName("select 테스트")
     @Test
     void givenTestData_whenSelecting_thenWorksFine() {
 
