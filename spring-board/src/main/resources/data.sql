@@ -1,3 +1,6 @@
+insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by, modified_at, modified_by) values
+('admin', 'admin', 'ohy', 'ohy@gmail.com', 'this is memo', now(), 'ohy', now(), 'ohy');
+
 insert into article (title, content, hashtag, created_at, created_by, modified_at, modified_by) values
 ('first article', 'first test test test test test test', '#test', '2021-03-10 08:48:50', 'ohy', '2021-05-30 23:53:46', 'ohy'),
 ('board', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.

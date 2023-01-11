@@ -81,4 +81,18 @@ public class DataRestTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("application/hal+json")));
     }
+
+    @DisplayName("회원 관련 API는 일체 제공하지 않는다.")
+    @Test
+    void RequestUserAccountsThrowsException() throws Exception {
+        //given
+
+        //when & then
+        mvc.perform(get("/api/userAccounts")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/userAccounts")).andExpect(status().isForbidden());
+        mvc.perform(put("/api/userAccounts")).andExpect(status().isForbidden());
+        mvc.perform(patch("/api/userAccounts")).andExpect(status().isForbidden());
+        mvc.perform(delete("/api/userAccounts")).andExpect(status().isForbidden());
+        mvc.perform(head("/api/userAccounts")).andExpect(status().isUnauthorized());
+    }
 }
