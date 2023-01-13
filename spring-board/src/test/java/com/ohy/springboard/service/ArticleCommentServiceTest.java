@@ -4,22 +4,23 @@ import com.ohy.springboard.domain.Article;
 import com.ohy.springboard.domain.ArticleComment;
 import com.ohy.springboard.domain.UserAccount;
 import com.ohy.springboard.dto.ArticleCommentDto;
+import com.ohy.springboard.dto.UserAccountDto;
 import com.ohy.springboard.repository.ArticleCommentRepository;
 import com.ohy.springboard.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
 
 @DisplayName("비즈니스 로직 - 댓글")
 @ExtendWith(MockitoExtension.class)
