@@ -15,7 +15,7 @@
 
     <header th:replace="header :: header"></header>
 
-    <main class="container">
+    <main class="container" th:object="${articles}">
 
         <div class="row">
             <div class="card card-margin search-form">
@@ -57,10 +57,14 @@
         <table class="table">
             <thead>
             <tr>
-                <th class="col-6">제목</th>
-                <th class="col-2">해시태그</th>
-                <th class="col">작성자</th>
-                <th class="col">작성일</th>
+                <th class="col-6"><a th:text="'제목'"
+                    th:href="@{/articles(page=${articles.number}, sort='title' + (*{sort.getOrderFor('title')} != null ? (*{sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : ''))}">제목</a></th>
+                <th class="col-2"><a th:text="'해시태그'"
+                    th:href="@{/articles(page=${articles.number}, sort='hashtag' + (*{sort.getOrderFor('hashtag')} != null ? (*{sort.getOrderFor('hashtag').direction.name} != 'DESC' ? ',desc' : '') : ''))}">해시태그</a></th>
+                <th class="col"><a th:text="'작성자'"
+                    th:href="@{/articles(page=${articles.number}, sort='userAccount.userId' + (*{sort.getOrderFor('userAccount.userId')} != null ? (*{sort.getOrderFor('userAccount.userId').direction.name} != 'DESC' ? ',desc' : '') : ''))}">작성자</a></th>
+                <th class="col"><a th:text="'작성일'"
+                    th:href="@{/articles(page=${articles.number}, sort='createdAt' + (*{sort.getOrderFor('createdAt')} != null ? (*{sort.getOrderFor('createdAt').direction.name} != 'DESC' ? ',desc' : '') : ''))}">작성일</a></th>
             </tr>
             </thead>
             <tbody th:remove="all-but-first">
