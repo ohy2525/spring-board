@@ -15,22 +15,22 @@
 
 <header th:replace="header :: header"></header>
 
-<main class="container">
-    <header class="py-5 text-center">
+<main th:object="${article}" class="container">
+    <header th:text="*{title}" class="py-5 text-center">
         <h1>첫번째 글</h1>
     </header>
 
     <div class="row g-5">
         <section class="col-md-5 col-lg-4 order-md-last">
             <aside>
-                <p><span>ohy</span></p>
-                <p><a href="mailto:ohy@gmail.com">ohy@mail.com</a></p>
-                <p><time datetime="2022-01-01T00:00:00">2022-01-01</time></p>
-                <p><span>#java</span></p>
+                <p><span th:text="*{nickname}">ohy</span></p>
+                <p><a  th:text="*{email}" href="mailto:ohy@gmail.com">ohy@mail.com</a></p>
+                <p><time  th:datetime="*{createdAt}" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd HH:mm:ss')}" datetime="2022-01-01T00:00:00">2022-01-01</time></p>
+                <p><span th:text="*{hashtag}">#java</span></p>
             </aside>
         </section>
 
-        <article class="col-md-7 col-lg-8">
+        <article th:text="*{content}" class="col-md-7 col-lg-8">
             <pre>본문<br><br></pre>
         </article>
     </div>
@@ -49,23 +49,13 @@
             </form>
 
             <ul class="row col-7">
-                <li>
+                <li th:each="articleComment : ${articleComments}">
                     <div>
-                        <strong>ohy</strong>
-                        <time><small>2023-01-01</small></time>
-                        <p>
+                        <strong th:text="${articleComment.nickname}"> ohy</strong>
+                        <small><time th:datetime="${articleComment.createdAt}" th:text="${#temporals.format(articleComment.createdAt, 'yyyy-MM-dd HH:mm:ss')}">2023-01-01</time></small>
+                        <p th:text="${articleComment.content}">
                             첫 댓글<br>
                             hihi
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <strong>test</strong>
-                        <time><small>2023-01-01</small></time>
-                        <p>
-                            안녕하세요<br>
-                            댓글입니다
                         </p>
                     </div>
                 </li>
