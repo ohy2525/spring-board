@@ -10,7 +10,6 @@ import com.ohy.springboard.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -54,14 +53,14 @@ class ArticleServiceTest {
         SearchType searchType = SearchType.TITLE;
         String searchKeyword = "title";
         Pageable pageable = Pageable.ofSize(20);
-        given(articleRepository.findByTitle(searchKeyword, pageable)).willReturn(Page.empty());
+        given(articleRepository.findByTitleContaining(searchKeyword, pageable)).willReturn(Page.empty());
 
         //when
         Page<ArticleDto> articles = sut.searchArticles(searchType, searchKeyword, pageable);
 
         //then
         assertThat(articles).isEmpty();
-        then(articleRepository).should().findByTitle(searchKeyword, pageable);
+        then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
     }
 
     @DisplayName("게시글 조회시 게시글 반환")
@@ -158,7 +157,7 @@ class ArticleServiceTest {
         sut.deleteArticle(1L);
 
         //then
-        then(articleRepository).should().delete(any(Article.class));
+        then(articleRepository).should().deleteById(articleId);
     }
 
     private UserAccount createUserAccount() {
