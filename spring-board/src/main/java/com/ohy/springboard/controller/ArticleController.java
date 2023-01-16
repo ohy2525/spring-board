@@ -82,7 +82,7 @@ public class ArticleController {
         return "articles/form";
     }
 
-    @GetMapping("/form")
+    @PostMapping("/form")
     public String postNewArticle(ArticleRequest articleRequest) {
         //TODO 인증 정보를 넣어저야 한다.
         articleService.saveArticle(articleRequest.toDto(UserAccountDto.of(
@@ -92,7 +92,7 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
-    @GetMapping("/{articleId/form")
+    @GetMapping("/{articleId}/form")
     public String updateArticleForm(@PathVariable Long articleId, ModelMap map) {
         ArticleResponse article = ArticleResponse.from(articleService.getArticle(articleId));
 
