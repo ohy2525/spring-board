@@ -2,7 +2,7 @@ package com.ohy.springboard.service;
 
 import com.ohy.springboard.domain.Article;
 import com.ohy.springboard.domain.UserAccount;
-import com.ohy.springboard.domain.type.SearchType;
+import com.ohy.springboard.domain.constant.SearchType;
 import com.ohy.springboard.dto.ArticleDto;
 import com.ohy.springboard.dto.ArticleWithCommentsDto;
 import com.ohy.springboard.dto.UserAccountDto;
