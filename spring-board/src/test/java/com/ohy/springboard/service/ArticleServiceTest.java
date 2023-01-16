@@ -4,7 +4,6 @@ import com.ohy.springboard.domain.Article;
 import com.ohy.springboard.domain.UserAccount;
 import com.ohy.springboard.domain.constant.SearchType;
 import com.ohy.springboard.dto.ArticleDto;
-import com.ohy.springboard.dto.ArticleWithCommentsDto;
 import com.ohy.springboard.dto.UserAccountDto;
 import com.ohy.springboard.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -118,7 +117,7 @@ class ArticleServiceTest {
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
 
         //when
-        ArticleWithCommentsDto dto = sut.getArticle(articleId);
+        ArticleDto dto = sut.getArticle(articleId);
 
         //then
         assertThat(dto)
@@ -168,7 +167,7 @@ class ArticleServiceTest {
         given(articleRepository.getReferenceById(dto.id())).willReturn(article);
 
         //when
-        sut.updateArticle(dto);
+        sut.updateArticle(dto.id(), dto);
 
         //then
         assertThat(article)
@@ -181,14 +180,14 @@ class ArticleServiceTest {
     @DisplayName("없는 게시글의 수정 정보를 입력하면, 경고 로그를 찍고 아무 것도 하지 않는다.")
     @Test
     void noneExistArticleUpdateTest() {
-        //given
-        ArticleDto dto = createArticleDto("new title", "new content", "#newhashtag");
+        // given
+        ArticleDto dto = createArticleDto("새 타이틀", "새 내용", "#springboot");
         given(articleRepository.getReferenceById(dto.id())).willThrow(EntityNotFoundException.class);
 
-        //when
-        sut.updateArticle(dto);
+        // when
+        sut.updateArticle(dto.id(), dto);
 
-        //then
+        // then
         then(articleRepository).should().getReferenceById(dto.id());
     }
 
@@ -243,16 +242,15 @@ class ArticleServiceTest {
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                1L,
-                "uno",
+                "ohy",
                 "password",
-                "uno@mail.com",
+                "uohy@mail.com",
                 "Uno",
                 "This is memo",
                 LocalDateTime.now(),
-                "uno",
+                "ohy",
                 LocalDateTime.now(),
-                "uno"
+                "ohy"
         );
     }
 }

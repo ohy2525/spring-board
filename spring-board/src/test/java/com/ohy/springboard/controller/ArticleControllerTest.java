@@ -1,7 +1,13 @@
 package com.ohy.springboard.controller;
 
 import com.ohy.springboard.config.SecurityConfig;
+import com.ohy.springboard.domain.constant.FormStatus;
 import com.ohy.springboard.domain.constant.SearchType;
+import com.ohy.springboard.dto.ArticleDto;
+import com.ohy.springboard.dto.ArticleWithCommentsDto;
+import com.ohy.springboard.dto.UserAccountDto;
+import com.ohy.springboard.dto.request.ArticleRequest;
+import com.ohy.springboard.response.ArticleResponse;
 import com.ohy.springboard.service.ArticleService;
 import com.ohy.springboard.service.PaginationService;
 import com.ohy.springboard.util.FormDataEncoder;
@@ -325,15 +331,15 @@ class ArticleControllerTest {
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                "uno",
+                "ohy",
                 "pw",
-                "uno@mail.com",
-                "Uno",
+                "ohy@mail.com",
+                "ohy",
                 "memo",
                 LocalDateTime.now(),
-                "uno",
+                "ohy",
                 LocalDateTime.now(),
-                "uno"
+                "ohy"
         );
     }
 
