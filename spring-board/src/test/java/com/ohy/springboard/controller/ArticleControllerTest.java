@@ -1,6 +1,7 @@
 package com.ohy.springboard.controller;
 
 import com.ohy.springboard.config.SecurityConfig;
+import com.ohy.springboard.domain.type.SearchType;
 import com.ohy.springboard.dto.ArticleWithCommentsDto;
 import com.ohy.springboard.dto.UserAccountDto;
 import com.ohy.springboard.service.ArticleService;
@@ -61,6 +62,27 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("paginationBarNumbers"));
 
         then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
+        then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
+    }
+
+    @DisplayName("[view][GET] 게시글 리스트 - 검색어와 함께 호출")
+    @Test
+    public void articleSearchListTest() throws Exception {
+        //given
+        SearchType searchType = SearchType.TITLE;
+        String searchValue = "title";
+        given(articleService.searchArticles(eq(searchType), eq(searchValue), any(Pageable.class))).willReturn(Page.empty());
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0,1,2,3,4));
+
+        //when&then
+        mvc.perform(get("/articles").queryParam("searchType", searchType.name()).queryParam("searchValue", searchValue))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/index"))
+                .andExpect(model().attributeExists("articles"))
+                .andExpect(model().attributeExists("searchTypes"));
+
+        then(articleService).should().searchArticles(eq(searchType), eq(searchValue), any(Pageable.class));
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
