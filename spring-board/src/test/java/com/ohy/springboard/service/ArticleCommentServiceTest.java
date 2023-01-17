@@ -7,6 +7,7 @@ import com.ohy.springboard.dto.ArticleCommentDto;
 import com.ohy.springboard.dto.UserAccountDto;
 import com.ohy.springboard.repository.ArticleCommentRepository;
 import com.ohy.springboard.repository.ArticleRepository;
+import com.ohy.springboard.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,10 +31,11 @@ class ArticleCommentServiceTest {
 
     @Mock private ArticleRepository articleRepository;
     @Mock private ArticleCommentRepository articleCommentRepository;
+    @Mock private UserAccountRepository userAccountRepository;
 
     @DisplayName("게시글 ID로 조회하면, 해당하는 댓글 리스트를 반환한다.")
     @Test
-    void givenArticleId_whenSearchingArticleComments_thenReturnsArticleComments() {
+    void returnsArticleComments() {
         // Given
         Long articleId = 1L;
         ArticleComment expected = createArticleComment("content");
@@ -51,10 +53,11 @@ class ArticleCommentServiceTest {
 
     @DisplayName("댓글 정보를 입력하면, 댓글을 저장한다.")
     @Test
-    void givenArticleCommentInfo_whenSavingArticleComment_thenSavesArticleComment() {
+    void savesArticleComment() {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
         given(articleRepository.getReferenceById(dto.articleId())).willReturn(createArticle());
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
         given(articleCommentRepository.save(any(ArticleComment.class))).willReturn(null);
 
         // When
@@ -62,12 +65,13 @@ class ArticleCommentServiceTest {
 
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
         then(articleCommentRepository).should().save(any(ArticleComment.class));
     }
 
     @DisplayName("댓글 저장을 시도했는데 맞는 게시글이 없으면, 경고 로그를 찍고 아무것도 안 한다.")
     @Test
-    void givenNonexistentArticle_whenSavingArticleComment_thenLogsSituationAndDoesNothing() {
+    void failLogsSituationAndDoesNothing() {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
         given(articleRepository.getReferenceById(dto.articleId())).willThrow(EntityNotFoundException.class);
@@ -77,12 +81,13 @@ class ArticleCommentServiceTest {
 
         // Then
         then(articleRepository).should().getReferenceById(dto.articleId());
+        then(userAccountRepository).shouldHaveNoInteractions();
         then(articleCommentRepository).shouldHaveNoInteractions();
     }
 
     @DisplayName("댓글 정보를 입력하면, 댓글을 수정한다.")
     @Test
-    void givenArticleCommentInfo_whenUpdatingArticleComment_thenUpdatesArticleComment() {
+    void updatesArticleComment() {
         // Given
         String oldContent = "content";
         String updatedContent = "댓글";
@@ -102,7 +107,7 @@ class ArticleCommentServiceTest {
 
     @DisplayName("없는 댓글 정보를 수정하려고 하면, 경고 로그를 찍고 아무 것도 안 한다.")
     @Test
-    void givenNonexistentArticleComment_whenUpdatingArticleComment_thenLogsWarningAndDoesNothing() {
+    void failUpdateLogsWarningAndDoesNothing() {
         // Given
         ArticleCommentDto dto = createArticleCommentDto("댓글");
         given(articleCommentRepository.getReferenceById(dto.id())).willThrow(EntityNotFoundException.class);
@@ -116,7 +121,7 @@ class ArticleCommentServiceTest {
 
     @DisplayName("댓글 ID를 입력하면, 댓글을 삭제한다.")
     @Test
-    void givenArticleCommentId_whenDeletingArticleComment_thenDeletesArticleComment() {
+    void deletesArticleComment() {
         // Given
         Long articleCommentId = 1L;
         willDoNothing().given(articleCommentRepository).deleteById(articleCommentId);
