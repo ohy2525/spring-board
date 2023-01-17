@@ -6,6 +6,7 @@ import com.ohy.springboard.domain.constant.SearchType;
 import com.ohy.springboard.dto.ArticleDto;
 import com.ohy.springboard.dto.UserAccountDto;
 import com.ohy.springboard.repository.ArticleRepository;
+import com.ohy.springboard.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ class ArticleServiceTest {
 
     @InjectMocks private  ArticleService sut;
     @Mock private  ArticleRepository articleRepository;
+    @Mock private UserAccountRepository userAccountRepository;
 
     @DisplayName("검색어 없이 게시글을 검색하면, 게시글 페이지를 반환한다.")
     @Test
@@ -147,34 +149,38 @@ class ArticleServiceTest {
     @DisplayName("게시글 정보를 입력하면, 게시글을 생성한다.")
     @Test
     void createArticleTest() {
-        //given
+        // Given
         ArticleDto dto = createArticleDto();
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(createUserAccount());
         given(articleRepository.save(any(Article.class))).willReturn(createArticle());
 
-        //when
+        // When
         sut.saveArticle(dto);
 
-        //then
+        // Then
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
         then(articleRepository).should().save(any(Article.class));
     }
 
     @DisplayName("게시글의 수정 정보를 입력하면, 게시글을 수정한다.")
     @Test
     void updateAndSaveArticleTest() {
-        //given
+        // Given
         Article article = createArticle();
-        ArticleDto dto = createArticleDto("new title", "new content", "#springtest");
+        ArticleDto dto = createArticleDto("새 타이틀", "새 내용", "#springboot");
         given(articleRepository.getReferenceById(dto.id())).willReturn(article);
+        given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(dto.userAccountDto().toEntity());
 
-        //when
+        // When
         sut.updateArticle(dto.id(), dto);
 
-        //then
+        // Then
         assertThat(article)
                 .hasFieldOrPropertyWithValue("title", dto.title())
                 .hasFieldOrPropertyWithValue("content", dto.content())
                 .hasFieldOrPropertyWithValue("hashtag", dto.hashtag());
         then(articleRepository).should().getReferenceById(dto.id());
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
     }
 
     @DisplayName("없는 게시글의 수정 정보를 입력하면, 경고 로그를 찍고 아무 것도 하지 않는다.")
@@ -196,13 +202,14 @@ class ArticleServiceTest {
     void deleteArticleTest() {
         //given
         Long articleId = 1L;
-        willDoNothing().given(articleRepository).deleteById(articleId);
+        String userId = "ohy";
+        willDoNothing().given(articleRepository).deletedByIdAndUserAccount_UserId(articleId, userId);
 
         //when
-        sut.deleteArticle(1L);
+        sut.deleteArticle(1L, userId);
 
         //then
-        then(articleRepository).should().deleteById(articleId);
+        then(articleRepository).should().deletedByIdAndUserAccount_UserId(articleId, userId);
     }
 
     private UserAccount createUserAccount() {
