@@ -1,8 +1,8 @@
 
 insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by, modified_at, modified_by) values
-('ohy', 'asdf1234', 'ohy', 'ohy@mail.com', 'I am ohy.', now(), 'ohy', now(), 'ohy');
+('ohy', '{noop}asdf1234', 'ohy', 'ohy@mail.com', 'I am ohy.', now(), 'ohy', now(), 'ohy');
 insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by, modified_at, modified_by) values
-('ohy2', 'asdf1234', 'ohy2', 'ohy2@mail.com', 'I am ohy2.', now(), 'ohy2', now(), 'ohy2');
+('ohy2', '{noop}asdf1234', 'ohy2', 'ohy2@mail.com', 'I am ohy2.', now(), 'ohy2', now(), 'ohy2');
 
 -- 123 게시글
 insert into article (user_id, title, content, hashtag, created_by, modified_by, created_at, modified_at) values
